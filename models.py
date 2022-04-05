@@ -5,6 +5,7 @@ import torch.nn as nn
 from transformers import BertModel
 from torchcrf import CRF
 
+
 class Bert_BiLSTM_CRF(nn.Module):
 
     def __init__(self, tag_to_ix, embedding_dim=768, hidden_dim=256):
@@ -23,7 +24,7 @@ class Bert_BiLSTM_CRF(nn.Module):
     
     def _get_features(self, sentence):
         with torch.no_grad():
-          embeds, _  = self.bert(sentence)
+            embeds, _ = self.bert(sentence)
         enc, _ = self.lstm(embeds)
         enc = self.dropout(enc)
         feats = self.linear(enc)
@@ -31,10 +32,9 @@ class Bert_BiLSTM_CRF(nn.Module):
 
     def forward(self, sentence, tags, mask, is_test=False):
         emissions = self._get_features(sentence)
-        if not is_test: # Training，return loss
-            loss=-self.crf.forward(emissions, tags, mask, reduction='mean')
+        if not is_test:  # Training，return loss
+            loss = -self.crf.forward(emissions, tags, mask, reduction='mean')
             return loss
-        else: # Testing，return decoding
-            decode=self.crf.decode(emissions, mask)
+        else:  # Testing，return decoding
+            decode = self.crf.decode(emissions, mask)
             return decode
- 

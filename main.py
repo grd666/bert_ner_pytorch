@@ -103,6 +103,7 @@ def test(model, iterator, device):
 
 if __name__=="__main__":
 
+#Model Initialization
     labels = ['B-LOC',
       'B-PER',
       'B-ORG',
@@ -125,8 +126,9 @@ if __name__=="__main__":
     ner = parser.parse_args()
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     model = Bert_BiLSTM_CRF(tag2idx).cuda()
-
     print('Initial model Done.')
+
+#Data Loading
     train_dataset = NerDataset(ner.trainset)
     eval_dataset = NerDataset(ner.validset)
     test_dataset = NerDataset(ner.testset)
